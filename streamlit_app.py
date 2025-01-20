@@ -1,3 +1,4 @@
+import requests
 import streamlit as st
 from snowflake.snowpark.context import get_active_session
 from snowflake.snowpark.functions import col
@@ -32,6 +33,8 @@ if ingredients_list:
     # Concatenar os ingredientes em uma string separada por vírgulas
     ingredients_string = ", ".join(ingredients_list)
     st.write("Ingredients String: ", ingredients_string)
+    smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+    sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
 
     # Comando SQL para inserir na tabela
     my_insert_stmt = f"""
@@ -51,7 +54,3 @@ if ingredients_list:
         except Exception as e:
             st.error(f"An error occurred: {e}")
 
-import requests
-smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
-#st.text(smoothiefroot_response.json())
-sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
