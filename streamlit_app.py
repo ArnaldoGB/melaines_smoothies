@@ -11,7 +11,8 @@ name_on_order = st.text_input("Name on Smoothie")
 st.write("The name on your Smoothie will be: ", name_on_order)
 
 # Obter a sessão ativa do Snowflake
-session = get_active_session()
+cnx = st.connection("snowflake")
+session = cnx.session()
 
 # Obter as opções de frutas disponíveis
 my_dataframe = session.table("smoothies.public.fruit_options").select(col("FRUIT_NAME")).to_pandas()
