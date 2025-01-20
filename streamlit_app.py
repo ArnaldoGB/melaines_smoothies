@@ -19,6 +19,10 @@ session = cnx.session()
 my_dataframe = session.table("smoothies.public.fruit_options").select(col("FRUIT_NAME")).to_pandas()
 st.dataframe(data=my_dataframe, use_container_width=True)
 
+# Adicionar dados da API SmoothieFroot
+smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
+
 # Seleção de ingredientes
 ingredients_list = st.multiselect(
     "Choose up to 5 ingredients:",
@@ -33,9 +37,7 @@ if ingredients_list:
     # Concatenar os ingredientes em uma string separada por vírgulas
     ingredients_string = ", ".join(ingredients_list)
     st.write("Ingredients String: ", ingredients_string)
-    smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
-    sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
-
+    
     # Comando SQL para inserir na tabela
     my_insert_stmt = f"""
     INSERT INTO smoothies.public.orders (ingredients, name_on_order)
@@ -53,4 +55,5 @@ if ingredients_list:
             st.success("Your Smoothie is ordered!", icon="✅")
         except Exception as e:
             st.error(f"An error occurred: {e}")
+
 
